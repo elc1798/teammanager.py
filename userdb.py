@@ -5,7 +5,7 @@ db_name = "students.db"
 def get_user(name, student_id):
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
-    result = c.execute("SELECT * FROM %s WHERE name = %s , sid = %s " % (db_name, name, student_id))
+    result = c.execute("SELECT * FROM %s WHERE name = %s AND sid = %s " % (db_name, name, student_id))
     if len(result) > 1:
         print("Strange things... multiple entries for: %s , %s" % (name, student_id));
         conn.close()
@@ -20,11 +20,11 @@ def get_user(name, student_id):
 def check_user(name, student_id):
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
-    result = c.execute("SELECT * FROM %s WHERE name = %s , sid = %s " % (db_name, name, student_id))
+    result = c.execute("SELECT * FROM %s WHERE name = %s AND sid = %s " % (db_name, name, student_id))
     conn.close()
     if len(result) == 0:
         return 0 # No users found
-    else if result[0] == "admin":
+    elif result[0] == "admin":
         return 2 # Cuz bigger number means bigger power :)
     else:
         return 1 # Normal user

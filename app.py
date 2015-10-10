@@ -69,3 +69,9 @@ def add_user():
 def logout():
     session['logged_in'] = False
     return redirect(url_for("login"))
+
+if __name__ == "__main__":
+    app.secret_key = 'dcb61f28eafb8771213f3e0612422b8d'
+    app.debug = True
+    app.run(host='0.0.0.0', port=4567)
+
