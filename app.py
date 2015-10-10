@@ -14,11 +14,11 @@ def login():
             return render_template("login.html")
     else:
         assert(request.method == "POST")
-        if userdb.verify(request.form['username_in'], request.form['password_in']) > 0:
+        if userdb.check_user(request.form['username_in'], request.form['password_in']) > 0:
             session['logged_in'] = True
-            session['username_hash'] = userdb.username_hash(request.form['username_in']) # TODO FOR ETHAN
-            session['password_hash'] = userdb.password_hash(request.form['password_in']) # TODO FOR ETHAN
-            session["admin"] = userdb.verify(request.form['username_in'], request.form['password_in']) - 1:
+            session['username'] = request.form['username_in']
+            session['password'] = request.form['password_in']
+            session['admin'] = userdb.check_user(request.form['username_in'], request.form['password_in']) - 1
             return redirect(url_for("manager"))
         else:
             session['logged_in'] = False
@@ -27,19 +27,42 @@ def login():
 @app.route("/manager/check/<student>")
 @app.route("/manager/check/<student>/")
 def manager(student="no_user"):
-    if 'logged_in' not in session or not in session['logged_in']:
+    if 'logged_in' not in session or not session['logged_in']:
         return redirect(url_for("login"))
     if student == "no_user":
         return redirect(url_for("login"))
-    if userdb.check_user() == 1 : # TODO FOR ETHAN
+    if session['admin'] == 0:
         return render_template("student_dashboard.html", STUDENT=student)
-    elif userdb.check_user() == 2:
+    elif session['admin'] == 1:
         return render_template("admin_dashboard.html")
 
 @app.route("/manager/add_user")
 @app.route("/manager/add_user/")
-def add_user(): # TODO ETHAN
-    if userdb.check_user() == 2:
+def add_user():
+    if 'logged_in' not in session or not session['logged_in'] or session['admin'] == 0:
+        return redirect(url_for("manager"));
+    if request.method == "GET":
+        return render_template("add_user.html")
+    else:
+        data = []
+        data.append(request.form['new_name'])
+        data.append(request.form['new_sid'])
+        data.append(request.form['new_email'])
+        data.append(request.form['new_cell'])
+        try:
+            data.append(int(request.form['new_grad_year']))
+        except:
+            return render_template("add_user.html", ERROR="Invalid Graduation Year")
+        data.append(0)
+        data.append(0)
+        data.append(request.form['mother_name'])
+        data.append(request.form['father_name'])
+        data.append(request.form['parent_email'])
+        data.append(request.form['home_phone'])
+        data.append(request.form['cell_phone'])
+        data.append(request.form['pref_lang'])
+        userdb.add_user(data)
+        return redirect(url_for("manager"));
 
 @app.route("/logout")
 @app.route("/logout/")
