@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Sword Art Online Abridged</title>
+    <title> Team Manager </title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -36,13 +36,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/sao">Sword Art Online Abridged</a>
+                <a class="navbar-brand" href="/sao">Team Manager</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/home">Home</a></li>
-                    <li><a href="/inspire">Inspiration</a></li>
-                    <li><a href="/youtube">YouTube</a></li>
                     <li><a href="/logout">Log Out</a></li>
                 </ul>
             </div>
@@ -63,10 +60,22 @@
                 </ul>
             </div>
             <div class="col-sm-offset-3 col-md-offset-2 text-center main">
-                <h1 class="page-header">Sword Art Online Abridged</h1>
+                <h1 class="page-header"> STUDENT["name"] </h1>
 
-                <h2 class="sub-header">Episode {{NUM + 1}}</h2>
-                <br>
+                <table style="width:70%">
+                    <tr>
+                        <td> 
+                            <h2 class="sub-header"> Student </h2>
+                        </td>
+                        <td> STUDENT["year"] </td>
+                        <td> STUDENT["ID"] </td>
+                        <td> STUDENT["email"] </td>
+                    </tr>
+                    <tr>⏎
+                        <td>
+                            <h2 class="sub-header"> Parent </h2>⏎
+                        </td>
+                        <td> </td>
                 <br>
                 <br>
                 <div class="row">
