@@ -24,6 +24,8 @@ def login():
             session['logged_in'] = False
             return render_template("login.html", ERROR="User not recognized.")
 
+@app.route("/manager")
+@app.route("/manager/")
 @app.route("/manager/check/<student>")
 @app.route("/manager/check/<student>/")
 def manager(student="no_user"):
