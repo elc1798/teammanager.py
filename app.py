@@ -16,27 +16,37 @@ def login():
         assert(request.method == "POST")
         if userdb.check_user(request.form['username_in'], request.form['password_in']) > 0:
             session['logged_in'] = True
-            session['username'] = request.form['username_in']
-            session['password'] = request.form['password_in']
+            session['lastname'] = request.form['username_in']
+            session['sid'] = request.form['password_in']
             session['admin'] = userdb.check_user(request.form['username_in'], request.form['password_in']) - 1
             return redirect(url_for("manager"))
         else:
             session['logged_in'] = False
             return render_template("login.html", ERROR="User not recognized.")
 
-@app.route("/manager")
-@app.route("/manager/")
-@app.route("/manager/check/<student>")
-@app.route("/manager/check/<student>/")
-def manager(student="no_user"):
+@app.route("/admin")
+@app.route("/admin/")
+@app.route("/admin/<id>")
+@app.route("/admin/<id>/")
+def admin(id=-1):
     if 'logged_in' not in session or not session['logged_in']:
         return redirect(url_for("login"))
-    if student == "no_user":
+    if session['admin'] == 0:
+        return redirect(url_for("manager"))
+
+
+@app.route("/manager")
+@app.route("/manager/")
+def manager():
+    if 'logged_in' not in session or not session['logged_in']:
+        return redirect(url_for("login"))
+    if "lastname" not in session or "sid" not in session:
         return redirect(url_for("login"))
     if session['admin'] == 0:
-        return render_template("student_dashboard.html", STUDENT=student)
+        student_data = get_user(session['lastname'], session['sid'])
+        return render_template("student_dashboard.html", INFO=student_data)
     elif session['admin'] == 1:
-        return render_template("admin_dashboard.html")
+        return redirect(url_for("admin"))
 
 @app.route("/manager/add_user")
 @app.route("/manager/add_user/")
@@ -73,7 +83,7 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == "__main__":
-    app.secret_key = 'dcb61f28eafb8771213f3e0612422b8d'
+    app.secret_key = '531c2cf2725ce6cf56428011e29adff6'
     app.debug = True
     app.run(host='0.0.0.0', port=4567)
 
