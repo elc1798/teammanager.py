@@ -12,6 +12,15 @@ def user_exists(last_name, sid):
     conn.close()
     return len(result) == 1 # If > 1, then duplicate users
 
+# Returns True if ID exists
+def id_exists(sid):
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    QUERY = "SELECT * FROM students WHERE sid = ?;"
+    result = list(c.execute(QUERY, (sid,)))
+    conn.close()
+    return len(result) == 1
+
 # Returns a dictionary containing the following keys, given a student id
 #   "first_name"        string
 #   "last_name"         string
@@ -26,12 +35,56 @@ def user_exists(last_name, sid):
 #   "service_hours"     integer
 #   "mother"            string
 #   "father"            string
+#   "mother_email"      string
+#   "father_email"      string
 #   "home_phone"        integer
 #   "mother_cell"       integer
 #   "father_cell"       integer
 #   "pref_lang"         string
 def get_user_data(sid):
-    pass
+    if not id_exists(sid):
+        return {}
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    QUERY = "SELECT %s FROM %s WHERE sid = ?;"
+    data = {}
+    data["first_name"] = str(list(c.execute(QUERY % ("first_name",
+        "students"),(sid,)))[0][0])
+    data["last_name"] = str(list(c.execute(QUERY % ("last_name",
+        "students"),(sid,)))[0][0])
+    data["osis"] = int(list(c.execute(QUERY % ("osis",
+        "student_data"),(sid,)))[0][0])
+    data["student_id"] = int(sid)
+    data["student_email"] = str(list(c.execute(QUERY % ("email",
+        "students"),(sid,)))[0][0])
+    data["student_cell"] = int(list(c.execute(QUERY % ("cell",
+        "students"),(sid,)))[0][0])
+    data["birthday"] = str(list(c.execute(QUERY % ("DOB",
+        "student_data"),(sid,)))[0][0])
+    data["grad_year"] = int(list(c.execute(QUERY % ("grad_year",
+        "student_data"),(sid,)))[0][0])
+    data["safety_test"] = int(list(c.execute(QUERY % ("safety_test",
+        "student_data"),(sid,)))[0][0]) == 1
+    data["team_dues"] = int(list(c.execute(QUERY % ("team_dues",
+        "student_data"),(sid,)))[0][0]) == 1
+    data["service_hours"] = int(list(c.execute(QUERY % ("service_hours",
+        "student_data"),(sid,)))[0][0])
+    data["mother"] = str(list(c.execute(QUERY % ("mother",
+        "parent_data"),(sid,)))[0][0])
+    data["father"] = str(list(c.execute(QUERY % ("father",
+        "parent_data"),(sid,)))[0][0])
+    data["mother_email"] = str(list(c.execute(QUERY % ("mother_email",
+        "parent_data"),(sid,)))[0][0])
+    data["home_phone"] = int(list(c.execute(QUERY % ("home_phone",
+        "parent_data"),(sid,)))[0][0])
+    data["mother_cell"] = int(list(c.execute(QUERY % ("mother_cell",
+        "parent_data"),(sid,)))[0][0])
+    data["father_cell"] = int(list(c.execute(QUERY % ("father_cell",
+        "parent_data"),(sid,)))[0][0])
+    data["pref_lang"] = str(list(c.execute(QUERY % ("pref_lang",
+        "parent_data"),(sid,)))[0][0])
+    conn.close()
+    return data
 
 # Adds a user into the database given a list
 # data[0] should contain student_id
@@ -44,7 +97,7 @@ def add_user(data):
     c = conn.cursor()
     QUERY1 = "INSERT INTO students VALUES (?,?,?,?,?);"
     QUERY2 = "INSERT INTO student_data VALUES (?,?,?,?,?,?,?);"
-    QUERY3 = "INSERT INTO parent_data VALUES (?,?,?,?,?,?,?,?,?)"
+    QUERY3 = "INSERT INTO parent_data VALUES (?,?,?,?,?,?,?,?,?);"
     PARAM1 = (data[1][0], data[1][1], data[0], data[1][2], data[1][3])
     PARAM2 = (data[0], data[2][0], data[2][1], data[2][2], 0, 0, 0)
     PARAM3 = ([data[0]] + data[3])
@@ -60,5 +113,10 @@ def remove_user(last_name, sid, osis):
 
 # Checks if the user is an admin
 def is_admin(username, password):
-    pass
+    conn = sqlite3.connect("super_secret.db")
+    c = conn.cursor()
+    QUERY = "SELECT * FROM admins WHERE username = ? AND password = ?;"
+    result = list(c.execute(QUERY, (username, password)))
+    conn.close()
+    return len(result) == 1
 
