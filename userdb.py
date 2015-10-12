@@ -54,7 +54,7 @@ def get_user_data(sid):
         "students"),(sid,)))[0][0])
     data["osis"] = int(list(c.execute(QUERY % ("osis",
         "student_data"),(sid,)))[0][0])
-    data["student_id"] = int(sid)
+    data["student_id"] = sid
     data["student_email"] = str(list(c.execute(QUERY % ("email",
         "students"),(sid,)))[0][0])
     data["student_cell"] = int(list(c.execute(QUERY % ("cell",
