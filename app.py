@@ -3,87 +3,94 @@ import userdb
 
 app = Flask(__name__)
 
+@app.route("/studentcheck")
+@app.route("/studentcheck/")
+def student_check():
+    # Verify that session contains a student ID
+    if 'sid' not in session:
+        session.clear()     # Clear the session for a clean start
+        return redirect(url_for("studentlogin"))
+    else:
+        info = userdb.get_user_data(session['sid'])
+        return render_template("student_dashboard.html", INFO=info)
+
+@app.route("/admincheck")
+@app.route("/admincheck/<sid>")
+def admin_console(sid=-1):
+    # Verify that session contains username, password, and admin field
+    if "username" not in session or "password" not in session or "admin" not in session:
+        session.clear()
+        return redirect(url_for("studentlogin"))
+    # Security checks...
+    if not userdb.is_admin(session['username'], session['password']):
+        session.clear()
+        return redirect(url_for("studentlogin"))
+    if not sesson['admin']:
+        session.clear()
+        return redirect(url_for("studentlogin"))
+    if not userdb.id_exists(sid):
+        return render_template("admin_dashboard.html")
+    else:
+        return render_template("admin_dashboard.html",
+                INFO=userdb.get_user_data(sid))
+
+# Methods for Login System
+
+# Student login
 @app.route("/", methods=["GET", "POST"])
-@app.route("/login", methods=["GET", "POST"])
-@app.route("/login/", methods=["GET", "POST"])
-def login():
+@app.route("/studentlogin", methods=["GET", "POST"])
+@app.route("/studentlogin/", methods=["GET", "POST"])
+def studentlogin():
+    # If the request method is GET, then it's not the form
     if request.method == "GET":
+        # If user is already logged in, bring them to manager based on access
+        # level.
         if 'logged_in' in session and session['logged_in']:
-            return redirect(url_for("manager"))
+            # Assert that "admin" key is in the session. It SHOULD be, but you
+            # never know
+            if 'admin' not in session:
+                return render_template("student_login.html")
+            # If the admin field is true, return admin console
+            if 'admin' in session and session['admin']:
+                return redirect(url_for("admin_console"))
+            # Otherwise,return the student console for the student ID
+            else:
+                return redirect(url_for("student_check"))
+        # If the user isn't logged in, render the student login page by default
         else:
-            return render_template("login.html")
+            return render_template("student_login.html")
+    # The request method should be POST
     else:
+        # Sanity Check
         assert(request.method == "POST")
-        if userdb.check_user(request.form['username_in'], request.form['password_in']) > 0:
-            session['logged_in'] = True
-            session['lastname'] = request.form['username_in']
-            session['sid'] = request.form['password_in']
-            session['admin'] = userdb.check_user(request.form['username_in'], request.form['password_in']) - 1
-            return redirect(url_for("manager"))
-        else:
-            session['logged_in'] = False
-            return render_template("login.html", ERROR="User not recognized.")
-
-@app.route("/admin")
-@app.route("/admin/")
-@app.route("/admin/<id>")
-@app.route("/admin/<id>/")
-def admin(id=-1):
-    if 'logged_in' not in session or not session['logged_in']:
-        return redirect(url_for("login"))
-    if session['admin'] == 0:
-        return redirect(url_for("manager"))
-
-
-@app.route("/manager")
-@app.route("/manager/")
-def manager():
-    if 'logged_in' not in session or not session['logged_in']:
-        return redirect(url_for("login"))
-    if "lastname" not in session or "sid" not in session:
-        return redirect(url_for("login"))
-    if session['admin'] == 0:
-        student_data = get_user(session['lastname'], session['sid'])
-        return render_template("student_dashboard.html", INFO=student_data)
-    elif session['admin'] == 1:
-        return redirect(url_for("admin"))
-
-@app.route("/manager/add_user")
-@app.route("/manager/add_user/")
-def add_user():
-    if 'logged_in' not in session or not session['logged_in'] or session['admin'] == 0:
-        return redirect(url_for("manager"));
-    if request.method == "GET":
-        return render_template("add_user.html")
-    else:
-        data = []
-        data.append(request.form['new_name'])
-        data.append(request.form['new_sid'])
-        data.append(request.form['new_email'])
-        data.append(request.form['new_cell'])
+        last_name = str(request.form['last_name'])
+        sid = request.form['sid']
+        # If sid is NaN, then immediately kill. Kill it with fire.
         try:
-            data.append(int(request.form['new_grad_year']))
+            sid = int(sid)
         except:
-            return render_template("add_user.html", ERROR="Invalid Graduation Year")
-        data.append(0)
-        data.append(0)
-        data.append(request.form['mother_name'])
-        data.append(request.form['father_name'])
-        data.append(request.form['parent_email'])
-        data.append(request.form['home_phone'])
-        data.append(request.form['cell_phone'])
-        data.append(request.form['pref_lang'])
-        userdb.add_user(data)
-        return redirect(url_for("manager"));
+            return render_template("student_login.html", ERROR="Invalid 4-digit ID")
+        # Check if valid user
+        if userdb.user_exists(last_name, sid):
+            session['logged_in'] = True         # Set logged in to True
+            session['last_name'] = last_name    # Set last_name variable
+            session['sid'] = sid                # Set sid variable
+            return redirect(url_for("student_check"))
+        else:
+            return render_template("student_login.html", ERROR="Unknown User")
 
 @app.route("/logout")
 @app.route("/logout/")
 def logout():
-    session['logged_in'] = False
-    return redirect(url_for("login"))
+    session.clear()
+    return redirect(url_for("studentlogin"))
 
 if __name__ == "__main__":
-    app.secret_key = '531c2cf2725ce6cf56428011e29adff6'
+    try:
+        f = open("app_secret_key")
+        app.secret_key = str(f.readline())
+    except:
+        exit()
     app.debug = True
     app.run(host='0.0.0.0', port=4567)
 
