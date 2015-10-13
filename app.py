@@ -36,6 +36,40 @@ def admin_console(sid=-1):
 
 # Methods for Login System
 
+@app.route("/adminlogin", methods=["GET", "POST"])
+@app.route("/adminlogin/", methods=["GET", "POST"])
+def adminlogin():
+    # If the request method is GET, then it's not the form
+    if request.method == "GET":
+        # If user is already logged in, bring them to manager based on access
+        # level.
+        if 'logged_in' in session and session['logged_in']:
+            # If the admin field is true, return admin console
+            if 'admin' in session and session['admin']:
+                return redirect(url_for("admin_console"))
+            # Otherwise,return the student console for the student ID
+            else:
+                return redirect(url_for("student_check"))
+        # If the user isn't logged in, render the student login page by default
+        else:
+            return render_template("admin_login.html")
+    # The request method should be POST
+    else:
+        # Sanity Check
+        assert(request.method == "POST")
+        u_name = str(request.form['username'])
+        p_word = str(request.form['password'])
+        # Check if valid user
+        if userdb.is_admin(last_name, sid):
+            session['logged_in'] = True         # Set logged in to True
+            session['admin'] = True             # Set admin to True
+            session['username'] = u_name        # Set last_name variable
+            session['password'] = p_word        # Set sid variable
+            return redirect(url_for("admin_console"))
+        else:
+            return render_template("admin_login.html", ERROR="Unknown User")
+
+
 # Student login
 @app.route("/", methods=["GET", "POST"])
 @app.route("/studentlogin", methods=["GET", "POST"])
@@ -46,10 +80,6 @@ def studentlogin():
         # If user is already logged in, bring them to manager based on access
         # level.
         if 'logged_in' in session and session['logged_in']:
-            # Assert that "admin" key is in the session. It SHOULD be, but you
-            # never know
-            if 'admin' not in session:
-                return render_template("student_login.html")
             # If the admin field is true, return admin console
             if 'admin' in session and session['admin']:
                 return redirect(url_for("admin_console"))
@@ -93,4 +123,3 @@ if __name__ == "__main__":
         exit()
     app.debug = True
     app.run(host='0.0.0.0', port=4567)
-
