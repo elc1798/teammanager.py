@@ -14,8 +14,10 @@ def student_check():
         info = userdb.get_user_data(session['sid'])
         return render_template("student_dashboard.html", INFO=info)
 
-@app.route("/admincheck")
-@app.route("/admincheck/<sid>")
+@app.route("/admincheck", methods=["GET", "POST"])
+@app.route("/admincheck/", methods=["GET", "POST"])
+@app.route("/admincheck/<sid>", methods=["GET", "POST"])
+@app.route("/admincheck/<sid>/", methods=["GET", "POST"])
 def admin_console(sid=-1):
     # Verify that session contains username, password, and admin field
     if "username" not in session or "password" not in session or "admin" not in session:
@@ -29,7 +31,14 @@ def admin_console(sid=-1):
         session.clear()
         return redirect(url_for("studentlogin"))
     if not userdb.id_exists(sid):
-        return render_template("admin_dashboard.html")
+        if request.method == "GET":
+            return render_template("admin_dashboard.html")
+        else:
+            # Sanity check
+            assert(request.method == "POST")
+            # The form on the admin console is the filter.
+            # Check for each field from the form
+            # TODO
     else:
         return render_template("admin_dashboard.html",
                 INFO=userdb.get_user_data(sid))
