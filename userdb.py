@@ -110,6 +110,21 @@ def add_user(data):
     conn.commit()
     conn.close()
 
+# Gets a list of users provided a filter of fields
+# The field of filters is a dictionary containing the keys:
+# first_name_comparator         string that contains the beginning of the name
+# last_name_comparator          string that contains the beginning of the name
+# sid_comparator                string that contains the beginning of the sid
+# osis_comparator               string that contains the beginning of the osis
+# graduation_year               string that contains the graduation year
+# safety_test                   boolean... duh
+# team_dues                     boolean... duh
+# medicals                      boolean... duh
+# service_hours_lower           integer, lowerbound of service hours
+# service_hours_upper           integer, upperbound of service hours
+def get_data_with_filter(user_filter):
+    pass
+
 # Deletes a user from the database
 def remove_user(last_name, sid, osis):
     pass
