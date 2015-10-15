@@ -30,6 +30,7 @@ def id_exists(sid):
 #   "student_cell"      long
 #   "birthday"          string
 #   "grad_year"         integer
+#   "medicals"          boolean
 #   "safety_test"       boolean
 #   "team_dues"         boolean
 #   "service_hours"     integer
@@ -62,6 +63,8 @@ def get_user_data(sid):
     data["birthday"] = str(list(c.execute(QUERY % ("DOB",
         "student_data"),(sid,)))[0][0])
     data["grad_year"] = int(list(c.execute(QUERY % ("grad_year",
+        "student_data"),(sid,)))[0][0])
+    data["medicals"] = str(list(c.execute(QUERY % ("medicals",
         "student_data"),(sid,)))[0][0])
     data["safety_test"] = int(list(c.execute(QUERY % ("safety_test",
         "student_data"),(sid,)))[0][0]) == 1
@@ -96,10 +99,10 @@ def add_user(data):
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     QUERY1 = "INSERT INTO students VALUES (?,?,?,?,?);"
-    QUERY2 = "INSERT INTO student_data VALUES (?,?,?,?,?,?,?);"
+    QUERY2 = "INSERT INTO student_data VALUES (?,?,?,?,?,?,?,?);"
     QUERY3 = "INSERT INTO parent_data VALUES (?,?,?,?,?,?,?,?,?);"
     PARAM1 = (data[1][0], data[1][1], data[0], data[1][2], data[1][3])
-    PARAM2 = (data[0], data[2][0], data[2][1], data[2][2], 0, 0, 0)
+    PARAM2 = (data[0], data[2][0], data[2][1], data[2][2], 0, 0, 0, 0)
     PARAM3 = ([data[0]] + data[3])
     c.execute(QUERY1, PARAM1)
     c.execute(QUERY2, PARAM2)
