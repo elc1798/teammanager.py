@@ -1,113 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="../../favicon.ico">
 
-    <title> Team Manager </title>
+        <title> Team Manager </title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <!-- Bootstrap core CSS -->
+        <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='dashboard.css') }}" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="{{ url_for('static', filename='dashboard.css') }}" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-</head>
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+            <![endif]-->
+    </head>
 
-<body>
+    <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/logout">Log Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
         <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/sao">Team Manager</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/logout">Log Out</a></li>
-                </ul>
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <ul class="nav nav-sidebar">
+                        <li><a href="http://stuypulse.com/calendar/"
+                               target="links_iframe">Calendar</a></li>
+                        <li><a href="https://my.usfirst.org/stims/"
+                               target="links_iframe">STIMS</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-offset-3 col-md-offset-2 text-center main">
+                    <h1 class="page-header">
+                        {% filter upper %}
+                        {{ INFO["first_name"] }} {{
+                        INFO["last_name"] }}
+                        {% endfilter  %}
+                    </h1>
+
+                    <h2 class="sub-header"> Information </h2>
+                    <table style="width:70%">
+                        <tr>
+                            <td>
+                                <h2 class="sub-header"> Student Info </h2>
+                            </td>
+                            <td> <b>Graduation Year</b>: {{ INFO["grad_year"] }} </td>
+                            <td> <b>Student ID</b>: {{ INFO["student_id"] }} </td>
+                            <td> <b>Student OSIS</b>: {{ INFO["osis"] }} </td>
+                            <td> <b>Date of Birth</b>: {{ INFO["birthday"] }} </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h2 class="sub-header"> Contact Info </h2>
+                            </td>
+                            <td> <b>Student Email</b>: {{ INFO["student_email"] }} </td>
+                            <td> <b>Student Cell</b>: {{ INFO["student_cell"] }} </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h2 class="sub-header"> Team Forms </h2>
+                            </td>
+                            <td> <b>Team Dues</b>: {{ INFO["team_dues"] }} </td>
+                            <td> <b>Safety Test</b>: {{ INFO["safety_test"] }} </td>
+                            <td> <b>Medicals:</b> {{ INFO["medicals"] }} </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h2 class="sub-header">Home Info </h2>
+                            </td>
+                            <td>
+                                <b>Preferred Language</b>: {{ INFO["pref_lang"] }}
+                            </td>
+                            <td>
+                                <b>Home Phone</b>: {{ INFO["home_phone"] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h2 class="sub-header">Mother Info </h2>
+                            </td>
+                            <td> <b>Mother Name</b>: {{ INFO["mother"] }} </td>
+                            <td>
+                                <b>Mother Email</b>: {{ INFO["mother_email"] }}
+                            </td>
+                            <td>
+                                <b>Mother Cell</b>: {{ INFO["mother_cell"] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h2 class="sub-header">Father Info </h2>
+                            </td>
+                            <td> <b>Father Name</b>: {{ INFO["father"] }} </td>
+                            <td>
+                                <b>Father Email</b>: {{ INFO["father_email"] }}
+                            </td>
+                            <td>
+                                <b>Father Cell</b>: {{ INFO["father_cell"] }}
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <br>
+                    <iframe src="" width="100%"
+                       height="700" name="links_iframe"></iframe>
+                </div>
             </div>
         </div>
-    </nav>
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-3 col-md-2 sidebar">
-                <ul class="nav nav-sidebar">
-                    {% for key, value in DICT.iteritems()|sort %}
-                        {% if key|int - 1 == NUM %}
-                            <li class="active"><a href="/sao/{{key|int - 1}}">Episode: {{key}}</a></li>
-                        {% else %}
-                            <li><a href="/sao/{{key|int - 1}}">Episode: {{key}}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-            <div class="col-sm-offset-3 col-md-offset-2 text-center main">
-                <h1 class="page-header"> STUDENT["name"] </h1>
-
-                <table style="width:70%">
-                    <tr>
-                        <td> 
-                            <h2 class="sub-header"> Student </h2>
-                        </td>
-                        <td> STUDENT["year"] </td>
-                        <td> STUDENT["ID"] </td>
-                        <td> STUDENT["email"] </td>
-                    </tr>
-                    <tr>⏎
-                        <td>
-                            <h2 class="sub-header"> Parent </h2>⏎
-                        </td>
-                        <td> </td>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="text-center">
-                        <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/{{EP}}" frameborder="0" allowFullScreen></iframe>
-                    </div>
-                </div>
-                <br>
-                <div class="row text-center">
-                    <div class="col-sm-4">
-                        {% if NUM != 0 %}
-                        <p class="lead">
-                            <a href="/sao/{{NUM - 1}}" class="btn btn-lg btn-default">Previous Episode</a>
-                        </p>
-                        {% endif %}
-                    </div>
-                    <div class="col-sm-4 pull-right">
-                        {% if NUM != 6 %}
-                        <p class="lead">
-                            <a href="/sao/{{NUM + 1}}" class="btn btn-lg btn-default">Next Episode</a>
-                        </p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-</body>
+        <!-- Bootstrap core JavaScript
+            ================================================== -->
+            <!-- Placed at the end of the document so the pages load faster -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+            <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    </body>
 
 </html>

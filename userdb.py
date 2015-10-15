@@ -65,7 +65,7 @@ def get_user_data(sid):
     data["grad_year"] = int(list(c.execute(QUERY % ("grad_year",
         "student_data"),(sid,)))[0][0])
     data["medicals"] = str(list(c.execute(QUERY % ("medicals",
-        "student_data"),(sid,)))[0][0])
+        "student_data"),(sid,)))[0][0]) == 1
     data["safety_test"] = int(list(c.execute(QUERY % ("safety_test",
         "student_data"),(sid,)))[0][0]) == 1
     data["team_dues"] = int(list(c.execute(QUERY % ("team_dues",
