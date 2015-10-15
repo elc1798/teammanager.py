@@ -64,6 +64,7 @@ target/
 \#*\#
 
 # Hehehe
+users.db
 super_secret.db
 sample.py
 app_secret_key
