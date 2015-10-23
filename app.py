@@ -44,6 +44,57 @@ def admin_console(sid=-1):
         return render_template("admin_view_student.html",
                 INFO=userdb.get_user_data(sid))
 
+@app.route("/admin/adduser", methods=["GET", "POST"])
+@app.route("/admin/adduser/", methods=["GET", "POST"])
+def adduser():
+    if request.method == "GET":
+        if "username" not in session or "password" not in session or "admin" not in session:
+            session.clear()
+            return redirect(url_for("studentlogin"))
+        # Security checks
+        if not userdb.is_admin(session['username'], session['password']):
+            session.clear()
+            return redirect(url_for("studentlogin"))
+        if not sesson['admin']:
+            session.clear()
+            return redirect(url_for("studentlogin"))
+
+    elif request.method == "POST":
+        form = request.form
+        required_keys = ["sid", "last_name", "first_name", "email", "cell", "osis", "dob",
+            "grad_year", "home_phone", "mother", "father", "mother_email", "father_email", "mother_cell", "father_cell", "pref_lang"]
+        for key in required_keys:
+            if key in form and form[key] != "":
+                continue
+            else:
+                return render_template("add_user.html", ERROR="Some information is missing")
+
+        sid = form["sid"]
+        last_name = form["last_name"]
+        first_name = form["first_name"]
+        email = form["email"]
+        cell = form["cell"]
+        osis = form["osis"]
+        dob = form["dob"]
+        grad_year = form["grad_year"]
+        home_phone = form["home_phone"]
+        mother = form["mother"]
+        mother_email = form["mother_email"]
+        mother_cell = form["mother_cell"]
+        father = form["father"]
+        father_email = form["father_email"]
+        father_cell = form["father_cell"]
+        pref_lang = form["pref_lang"]
+
+        data = []
+        data.append(sid)
+        data.append([last_name, first_name, email, cell])
+        data.append([osis, dob, grad_year])
+        data.append([mother, father, mother_email, father_email, home_phone, mother_cell, father_cell, pref_lang])
+        userdb.add_user(data)
+
+    return render_template("add_user.html")
+
 # Methods for Login System
 
 @app.route("/adminlogin", methods=["GET", "POST"])
