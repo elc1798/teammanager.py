@@ -27,7 +27,7 @@ def admin_console(sid=-1):
     if not userdb.is_admin(session['username'], session['password']):
         session.clear()
         return redirect(url_for("studentlogin"))
-    if not sesson['admin']:
+    if not session['admin']:
         session.clear()
         return redirect(url_for("studentlogin"))
     if not userdb.id_exists(sid):
@@ -55,7 +55,7 @@ def adduser():
         if not userdb.is_admin(session['username'], session['password']):
             session.clear()
             return redirect(url_for("studentlogin"))
-        if not sesson['admin']:
+        if not session['admin']:
             session.clear()
             return redirect(url_for("studentlogin"))
 
@@ -118,14 +118,20 @@ def adminlogin():
     else:
         # Sanity Check
         assert(request.method == "POST")
-        u_name = str(request.form['username'])
-        p_word = str(request.form['password'])
+
+        last_name = str(request.form['last_name'])
+        sid = request.form['sid']
+        try:
+            sid = int(sid)
+        except:
+            return render_template("student_login.html", ERROR="Invalid 4-digit ID")
+
         # Check if valid user
         if userdb.is_admin(last_name, sid):
             session['logged_in'] = True         # Set logged in to True
             session['admin'] = True             # Set admin to True
-            session['username'] = u_name        # Set last_name variable
-            session['password'] = p_word        # Set sid variable
+            session['username'] = last_name     # Set last_name variable
+            session['password'] = sid           # Set sid variable
             return redirect(url_for("admin_console"))
         else:
             return render_template("admin_login.html", ERROR="Unknown User")
