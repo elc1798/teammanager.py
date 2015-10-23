@@ -127,7 +127,21 @@ def get_data_with_filter(user_filter):
 
 # Deletes a user from the database
 def remove_user(last_name, sid, osis):
-    pass
+    if not user_exists(last_name, sid):
+        return
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    QUERY1 = "DELETE FROM students WHERE last_name = ? AND sid = ?;"
+    QUERY2 = "DELETE FROM student_data WHERE sid = ? AND osis = ?;"
+    QUERY3 = "DELETE FROM parent_data WHERE sid = ?;"
+    PARAM1 = (last_name, sid,)
+    PARAM2 = (sid, osis,)
+    PARAM3 = (sid,)
+    c.execute(QUERY1, PARAM1)
+    c.execute(QUERY2, PARAM2)
+    c.execute(QUERY3, PARAM3)
+    conn.commit()
+    conn.close()
 
 # Checks if the user is an admin
 def is_admin(username, password):
