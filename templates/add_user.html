@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Adduser</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='signin.css') }}" rel="stylesheet">
+
+    <!-- JS Imports -->
+    <script src="/static/jquery-1.11.3.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <div class="container">
+
+        <form method="POST" class="form-signin">
+            <h2 class="form-signin-heading">Add User:</h2>
+
+            <label for="first_name" class="sr-only">First Name</label>
+            <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First Name" autofocus>
+            <label for="last_name" class="sr-only">Last Name</label>
+            <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Last Name " autofocus>
+            <label for="password" class="sr-only">4-Digit ID</label>
+            <input type="text" id="sid" name="sid" class="form-control" placeholder="4 Digit ID">
+            <label for="email" class="sr-only">Email</label>
+            <input type="text" id="email" name="email" class="form-control" placeholder="Email">
+            <label for="cell" class="sr-only">Cell</label>
+            <input type="text" id="cell" name="cell" class="form-control" placeholder="Cell">
+            <label for="osis" class="sr-only">OSIS</label>
+            <input type="text" id="osis" name="osis" class="form-control" placeholder="OSIS">
+            <label for="dob" class="sr-only">Date Of Birth</label>
+            <input type="text" id="dob" name="dob" class="form-control" placeholder="Date of Birth">
+            <label for="grad_year" class="sr-only">Graduating Year</label>
+            <input type="text" id="grad_year" name="grad_year" class="form-control" placeholder="Graduating Year">
+            <label for="home_phone" class="sr-only">Home Phone</label>
+            <input type="text" id="home_phone" name="home_phone" class="form-control" placeholder="Home Phone">
+            <label for="mother" class="sr-only">Mother's Name</label>
+            <input type="text" id="mother" name="mother" class="form-control" placeholder="Mother's Name">
+            <label for="mother_email" class="sr-only">Mother's Email</label>
+            <input type="text" id="mother_email" name="mother_email" class="form-control" placeholder="Mother's Email">
+            <label for="mother_cell" class="sr-only">Mother's Cell</label>
+            <input type="text" id="mother_cell" name="mother_cell" class="form-control" placeholder="Mother's Cell">
+            <label for="father" class="sr-only">Father's Name</label>
+            <input type="text" id="father" name="father" class="form-control" placeholder="Father's Name">
+            <label for="father_email" class="sr-only">Father's Email</label>
+            <input type="text" id="father_email" name="father_email" class="form-control" placeholder="Father's Email">
+            <label for="father_cell" class="sr-only">Father's Cell</label>
+            <input type="text" id="father_cell" name="father_cell" class="form-control" placeholder="Father's Cell">
+            <label for="pref_lang" class="sr-only">Preferred Language</label>
+            <input type="text" id="pref_lang" name="pref_lang" class="form-control" placeholder="Preferred Language">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Add User</button>
+        </form>
+        {% if ERROR %}
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="alert alert-danger col-md-4">
+                <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>ERROR:</strong> {{ERROR}}
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
