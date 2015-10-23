@@ -124,7 +124,7 @@ def adminlogin():
         try:
             sid = int(sid)
         except:
-            return render_template("student_login.html", ERROR="Invalid 4-digit ID")
+            return render_template("admin_login.html", ERROR="Invalid 4-digit ID")
 
         # Check if valid user
         if userdb.is_admin(last_name, sid):
