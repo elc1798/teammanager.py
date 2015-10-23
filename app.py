@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 import userdb
 
 app = Flask(__name__)
@@ -67,7 +67,8 @@ def adduser():
             if key in form and form[key] != "":
                 continue
             else:
-                return render_template("add_user.html", ERROR="Some information is missing")
+                flash("Some information is missing", "danger")
+                break
 
         sid = form["sid"]
         last_name = form["last_name"]
@@ -124,7 +125,7 @@ def adminlogin():
         try:
             sid = int(sid)
         except:
-            return render_template("admin_login.html", ERROR="Invalid 4-digit ID")
+            flash("Invalid 4-digit ID", "danger")
 
         # Check if valid user
         if userdb.is_admin(last_name, sid):
@@ -134,7 +135,7 @@ def adminlogin():
             session['password'] = sid           # Set sid variable
             return redirect(url_for("admin_console"))
         else:
-            return render_template("admin_login.html", ERROR="Unknown User")
+            flash("Unknown User", "danger")
 
 
 # Student login
@@ -166,7 +167,7 @@ def studentlogin():
         try:
             sid = int(sid)
         except:
-            return render_template("student_login.html", ERROR="Invalid 4-digit ID")
+            flash("Invalid 4-digit ID", "danger")
         # Check if valid user
         if userdb.user_exists(last_name, sid):
             session['logged_in'] = True         # Set logged in to True
@@ -174,7 +175,7 @@ def studentlogin():
             session['sid'] = sid                # Set sid variable
             return redirect(url_for("student_check"))
         else:
-            return render_template("student_login.html", ERROR="Unknown User")
+            flash("Unknown User", "danger")
 
 @app.route("/logout")
 @app.route("/logout/")

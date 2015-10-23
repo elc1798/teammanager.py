@@ -70,16 +70,21 @@
             <input type="text" id="pref_lang" name="pref_lang" class="form-control" placeholder="Preferred Language">
             <button class="btn btn-lg btn-primary btn-block" type="submit">Add User</button>
         </form>
-        {% if ERROR %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
         <div class="row">
             <div class="col-md-4"></div>
-            <div class="alert alert-danger col-md-4">
+            <div class="alert alert-{{category}} col-md-4">
                 <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>ERROR:</strong> {{ERROR}}
+                <strong>{{category.upper()}}:</strong> {{message}}
             </div>
             <div class="col-md-4"></div>
         </div>
+        {% endfor %}
         {% endif %}
+        {% endwith %}
     </div>
 </body>
 
