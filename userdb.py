@@ -123,7 +123,40 @@ def add_user(data):
 # service_hours_lower           integer, lowerbound of service hours
 # service_hours_upper           integer, upperbound of service hours
 def get_data_with_filter(user_filter):
-    pass
+    first_name_comparator = user_filter['first_name'] + "%"
+    last_name_comparator = user_filter['last_name'] + "%"
+    sid_comparator = user_filter['sid'] + "%"
+    osis_comparator = user_filter['osis'] + "%"
+    graduation_year = user_filter['grad_year'] + "%"
+    # If no value is given, assign a default one
+    safety_test = user_filter.get("safety_test", False)
+    team_dues = user_filter.get("dues", False)
+    medicals = user_filter.get("medicals", False)
+    service_hours_lower = user_filter.get("service_hours_lower", 0)
+    service_hours_upper = user_filter.get("service_hours_upper", 1000000)
+
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    QUERY1 = "SELECT sid FROM student_data WHERE sid LIKE ? AND \
+        osis LIKE ? and grad_year LIKE ? AND safety_test = ? AND \
+        team_dues = ? AND medicals = ? AND service_hours BETWEEN ? AND ?;"
+    PARAM1 = (sid_comparator, osis_comparator, graduation_year, safety_test, team_dues, \
+              medicals, service_hours_lower, service_hours_upper,)
+    c.execute(QUERY1, PARAM1)
+    sids = c.fetchall()
+
+    QUERY2 = "SELECT first_name, last_name FROM students WHERE first_name LIKE ? AND last_name LIKE ? and sid LIKE ?;"
+    PARAM2 = (first_name_comparator, last_name_comparator, sid_comparator,)
+
+    # Format is {sid: (first_name, last_name,)}
+    result = {}
+    for sid in sids:
+        sid = sid[0]
+        c.execute(QUERY2, (first_name_comparator, last_name_comparator, sid,))
+        result[sid] = c.fetchone()
+
+    conn.close()
+    return result
 
 # Deletes a user from the database
 def remove_user(last_name, sid, osis):

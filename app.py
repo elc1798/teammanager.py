@@ -58,9 +58,8 @@ def admin_console(sid=-1):
             # Sanity check
             assert(request.method == "POST")
             # The form on the admin console is the filter.
-            # Check for each field from the form
-            # TODO
-            return render_template("admin_dashboard.html", FILTER=request.form)
+            filtered = userdb.get_data_with_filter(request.form)
+            return render_template("admin_dashboard.html", users=filtered)
     else:
         return render_template("admin_view_student.html",
                 INFO=userdb.get_user_data(sid))
