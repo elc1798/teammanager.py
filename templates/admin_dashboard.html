@@ -118,13 +118,25 @@
                             <button class="btn btn-lg btn-primary col-sm-offset-4 col-xs-4" type="submit">Filter</button>
                         </form>
                     </div>
-
                     <br>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="alert alert-{{category}} col-md-4">
+                            <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>{{category.upper()}}!</strong> {{message}}
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    {% if users %}
                     <div class="container">
                         <table class="table table-bordered table-hover">
-                            {% if users %}
-                            {% if users|length != 0 %}
-                            <h3>Results:</h3>
                             <thead>
                                 <td><b>ID</b></td>
                                 <td><b>Last, First</b></td>
@@ -135,12 +147,9 @@
                                 <td>{{name[1]}}, {{name[0]}}</td>
                             </tr>
                             {% endfor %}
-                            {% else %}
-                            <h3>No results</h3>
-                            {% endif %}
-                            {% endif %}
                         </table>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

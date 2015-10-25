@@ -59,7 +59,13 @@ def admin_console(sid=-1):
             assert(request.method == "POST")
             # The form on the admin console is the filter.
             filtered = userdb.get_data_with_filter(request.form)
-            return render_template("admin_dashboard.html", users=filtered)
+            # If get_data_with_filter returns an empty dictionary
+            if not filtered:
+                flash("No users meet the criteria", "danger")
+                return render_template("admin_dashboard.html")
+            else:
+                flash("Here are the results:", "success")
+                return render_template("admin_dashboard.html", users=filtered)
     else:
         return render_template("admin_view_student.html",
                 INFO=userdb.get_user_data(sid))

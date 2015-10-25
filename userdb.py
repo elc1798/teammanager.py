@@ -153,7 +153,9 @@ def get_data_with_filter(user_filter):
     for sid in sids:
         sid = sid[0]
         c.execute(QUERY2, (first_name_comparator, last_name_comparator, sid,))
-        result[sid] = c.fetchone()
+        name = c.fetchone()
+        if name is not None:
+            result[sid] = name
 
     conn.close()
     return result
