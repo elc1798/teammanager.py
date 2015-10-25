@@ -132,8 +132,8 @@ def get_data_with_filter(user_filter):
     safety_test = user_filter.get("safety_test", False)
     team_dues = user_filter.get("dues", False)
     medicals = user_filter.get("medicals", False)
-    service_hours_lower = user_filter.get("service_hours_lower", 0)
-    service_hours_upper = user_filter.get("service_hours_upper", 1000000)
+    service_hours_lower = 0 if not user_filter["service_hours_lower"] else user_filter["service_hours_lower"]
+    service_hours_upper = 1000000 if not user_filter["service_hours_upper"] else user_filter["service_hours_upper"]
 
     conn = sqlite3.connect(db_name)
     c = conn.cursor()

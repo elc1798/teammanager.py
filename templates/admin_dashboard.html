@@ -121,19 +121,23 @@
 
                     <br>
                     <div class="container">
-                        <h2>Results:</h2>
                         <table class="table table-bordered">
+                            {% if users %}
+                            {% if users|length != 0 %}
+                            <h3>Results:</h3>
                             <thead>
                                 <td><b>ID</b></td>
                                 <td><b>Last, First</b></td>
                             </thead>
-                            {% if users %}
                             {% for sid, name in users.iteritems() %}
                             <tr>
                                 <td>{{sid}}</td>
                                 <td>{{name[1]}}, {{name[0]}}</td>
                             </tr>
                             {% endfor %}
+                            {% else %}
+                            <h3>No results</h3>
+                            {% endif %}
                             {% endif %}
                         </table>
                     </div>
