@@ -121,7 +121,7 @@
 
                     <br>
                     <div class="container">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-hover">
                             {% if users %}
                             {% if users|length != 0 %}
                             <h3>Results:</h3>
@@ -130,7 +130,7 @@
                                 <td><b>Last, First</b></td>
                             </thead>
                             {% for sid, name in users.iteritems() %}
-                            <tr>
+                            <tr onclick="location.href='/admincheck/{{sid}}'">
                                 <td>{{sid}}</td>
                                 <td>{{name[1]}}, {{name[0]}}</td>
                             </tr>
