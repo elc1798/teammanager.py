@@ -22,7 +22,7 @@
         <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-            <![endif]-->
+        <![endif]-->
     </head>
 
     <body>
@@ -54,26 +54,102 @@
                         <li><a href="/logout">Logout</a></li>
                     </ul>
                 </div>
-                <div class="col-sm-offset-3 col-md-offset-2 text-center main">
-                    <h1 class="page-header"> {{ STUDENT["name"] }} </h1>
+                <div class="col-sm-offset-3 col-md-offset-0 text-center main">
+                    <div class="container">
+                        <form method="POST">
+                            <h2>Filter Users:</h2>
+                            <div class="row">
+                                <div class="form-group col-sm-offset-3 col-xs-3">
+                                    <label for="first_name" class="sr-only">First Name</label>
+                                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First Name" autofocus>
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label for="last_name" class="sr-only">Last Name</label>
+                                    <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Last Name">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-offset-3 col-xs-3">
+                                    <label for="sid" class="sr-only">4-Digit ID</label>
+                                    <input type="text" id="sid" name="sid" class="form-control" placeholder="4-Digit ID" autofocus>
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label for="osis" class="sr-only">OSIS</label>
+                                    <input type="text" id="osis" name="osis" class="form-control" placeholder="OSIS">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-offset-3 col-xs-3">
+                                    <label for="grad_year" class="sr-only">Graduating Year</label>
+                                    <input type="text" id="grad_year" name="grad_year" class="form-control" placeholder="Graduation Year" autofocus>
+                                </div>
+                                <div class="form-group col-xs-1">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="safety_test" name="safety_test" type="checkbox" value="yes">Safety Test
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-1">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="dues" name="dues" type="checkbox" value="yes">Dues
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-1">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="medicals" name="medicals" type="checkbox" value="yes">Medicals
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-offset-3 col-xs-3">
+                                    <label for="service_hours_lower" class="sr-only">4-Digit ID</label>
+                                    <input type="text" id="service_hours_lower" name="service_hours_lower" class="form-control" placeholder="Service Hours Lower" autofocus>
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label for="service_hours_upper" class="sr-only">Service Hours Upper</label>
+                                    <input type="text" id="service_hours_upper" name="service_hours_upper" class="form-control" placeholder="Service Hours Upper">
+                                </div>
+                            </div>
+                            <button class="btn btn-lg btn-primary col-sm-offset-4 col-xs-4" type="submit">Filter</button>
+                        </form>
+                    </div>
+                    <br>
 
-                    <table style="width:70%">
-                        <tr>
-                            <td>
-                                <h2 class="sub-header"> Student </h2>
-                            </td>
-                            <td> {{ STUDENT["year"] }} </td>
-                            <td> {{ STUDENT["ID"] }} </td>
-                            <td> {{ STUDENT["email"] }} </td>
-                        </tr>
-                        <tr>⏎
-                            <td>
-                                <h2 class="sub-header"> Parent </h2>⏎
-                            </td>
-                            <td> </td>
-                            <br>
-                            <br>
-                        </tr>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="alert alert-{{category}} col-md-4">
+                            <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>{{category.upper()}}!</strong> {{message}}
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    {% if users %}
+                    <div class="container">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <td><b>ID</b></td>
+                                <td><b>Last, First</b></td>
+                            </thead>
+                            {% for sid, name in users.iteritems() %}
+                            <tr onclick="location.href='/admincheck/{{sid}}'">
+                                <td>{{sid}}</td>
+                                <td>{{name[1]}}, {{name[0]}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
