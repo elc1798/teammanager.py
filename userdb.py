@@ -187,3 +187,27 @@ def is_admin(username, password):
     conn.close()
     return len(result) == 1
 
+# Updates student data in the database
+# data[0] should contain student_id
+# data[1] should contain [grad_year, OSIS, DOB]
+# data[2] should contain [email, cell]
+# data[3] should contain [team_dues, safety_test, medicals]
+# data[4] should contain [mother_name, mother_email, mother_cell
+# father_name father_email, father_cell, home_phone, pref_lang]
+def update_user(data):
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    QUERY1 = "UPDATE students SET email = ?, cell = ? WHERE sid = ?;"
+    QUERY2 = "UPDATE student_data SET osis = ?, DOB = ?, grad_year = ?, \
+        medicals = ?, safety_test = ?, team_dues = ? WHERE sid = ?;"
+    QUERY3 = "UPDATE parent_data SET mother = ?, mother_email = ?, mother_cell = ?, \
+        father = ?, father_email = ?, father_cell = ?, home_phone = ?, pref_lang = ? WHERE sid = ?;"
+    PARAM1 = (data[2][0], data[2][1], data[0],)
+    PARAM2 = (data[1][1], data[1][2], data[1][0], data[3][2], data[3][1], data[3][0], data[0],)
+    PARAM3 = (data[4][0], data[4][1], data[4][2], data[4][3], data[4][4], data[4][5], data[4][6], data[4][7], data[0],)
+    c.execute(QUERY1, PARAM1)
+    c.execute(QUERY2, PARAM2)
+    c.execute(QUERY3, PARAM3)
+    conn.commit()
+    conn.close()
+

@@ -70,6 +70,41 @@ def admin_console(sid=-1):
         return render_template("admin_view_student.html",
                 INFO=userdb.get_user_data(sid))
 
+@app.route("/admin/edit/<sid>", methods=["GET", "POST"])
+@app.route("/admin/edit/<sid>/", methods=["GET", "POST"])
+@login_required
+@admins_only
+def edit_user(sid):
+    if request.method == "POST":
+        form = request.form
+        email = form["email"]
+        cell = form["cell"]
+        osis = form["osis"]
+        dob = form["dob"]
+        grad_year = form["grad_year"]
+        team_dues = form.get("team_dues", 0)
+        safety_test = form.get("safety_test", 0)
+        medicals = form.get("medicals", 0)
+        home_phone = form["home_phone"]
+        mother = form["mother"]
+        mother_email = form["mother_email"]
+        mother_cell = form["mother_cell"]
+        father = form["father"]
+        father_email = form["father_email"]
+        father_cell = form["father_cell"]
+        pref_lang = form["pref_lang"]
+
+        data = []
+        data.append(sid)
+        data.append([grad_year, osis, dob])
+        data.append([email, cell])
+        data.append([team_dues, safety_test, medicals])
+        data.append([mother, mother_email, mother_cell, father, father_email, father_cell, home_phone, pref_lang])
+        userdb.update_user(data)
+        flash("Updated user", "success")
+
+    return render_template("admin_edit_student.html", INFO=userdb.get_user_data(sid))
+
 @app.route("/admin/adduser", methods=["GET", "POST"])
 @app.route("/admin/adduser/", methods=["GET", "POST"])
 @login_required
